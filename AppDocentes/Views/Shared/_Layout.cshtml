@@ -3,47 +3,110 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - AppDocentes</title>
+    <title>@ViewData["Title"] - App Docentes</title>
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/AppDocentes.styles.css" asp-append-version="true" />
+       
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-md navbar-light bg-light border-bottom shadow-sm mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">AppDocentes</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+
+                <img src="~/img/LOGO-CFT_WEB_BLANCO-04.png" alt="Logo" width="300" height="100" class="d-inline-block align-text-top"> <!-- Ajusta la ruta y el tamaño del logo -->
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto">
+
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
                         </li>
+
+                        <li class="nav-item dropdown">
+                            <a href="#" class="nav-link text-white dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="dropdown-menu">
+                                Docentes
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="dropdown-menu">
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Docentes" asp-action="Index">Maestro Docentes</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Movdocentes" asp-action="Index">Movimiento Docentes</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Datos" asp-action="Index">Grado Académico Docentes</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a href="#" class="nav-link text-white dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="dropdown-menu">
+                                Tablas
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="dropdown-menu">
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Escuelas" asp-action="Index">Escuelas</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Sedes" asp-action="Index">Sedes</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Carreras" asp-action="Index">Carreras</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Modulos" asp-action="Index">Módulos</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Semestres" asp-action="Index">Semestre</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Horarios" asp-action="Index">Horario</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Categorias" asp-action="Index">Categoría</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Grados" asp-action="Index">Grado Académico</a></li>
+                            </ul>
+                        </li>
+
+
+                        <li class="nav-item dropdown">
+                            <a href="#" class="nav-link text-white dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="dropdown-menu">
+                                Informes
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="dropdown-menu">
+                                <a class="nav-link text-white" href="@Url.Action("GeneratePdf", "Pdf")" target="_blank">
+                                    Descargar Informe PDF
+                                </a>
+                            </ul>
+                        </li>
+
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-white" asp-area="" asp-controller="Inicio" asp-action="Registrarse">Registrar</a>
                         </li>
+
+
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="#" onclick="confirmLogout()">Cerrar Sesión</a>
+                        </li>
+
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+    <main role="main" class="container pb-4">
+        @RenderBody()
+    </main>
 
-    <footer class="border-top footer text-muted">
+    <footer class="footer bg-light text-center border-top py-3">
         <div class="container">
-            &copy; 2025 - AppDocentes - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2025 - AppDocente - Diseñado y Desarrollado por TNS Tecnología de la Información
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+<script>
+    function confirmLogout() {
+        if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
+            window.location.href = '@Url.Action("Index", "Inicio")';
+        }
+    }
+</script>

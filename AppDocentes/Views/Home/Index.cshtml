@@ -1,8 +1,70 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿<div class="container mt-5">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+        .zoom-card {
+            background-color: #ffffff;
+            border-radius: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+            .zoom-card:hover {
+                transform: scale(1.12);
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+                z-index: 5;
+            }
+    </style>
+
+
+    <div class="text-center">
+        <h3 class="display-4 text-primary">Portal del Docente</h3>
+        <p class="lead mt-3">Administra y controla las horas de los docentes de forma eficiente y sencilla.</p>
+    </div>
+
+    <div class="row mt-5">
+
+        <!-- Card 1: -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card border-0 shadow-lg h-100 animate__animated animate__fadeInUp">
+                <div class="card-body text-center">
+                    <i class="bi bi-person-plus display-1 text-primary mb-3"></i>
+                    <h5 class="card-title">Registrar Horas</h5>
+                    <p class="card-text">Añade nuevos horas a la plataforma rápida y fácilmente.</p>
+                    <a href="@Url.Action("Index", "Pedidos")" class="btn btn-primary">Registrar</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 2: -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card border-0 shadow-lg h-100 animate__animated animate__fadeInUp">
+                <div class="card-body text-center">
+                    <i class="bi bi-calendar-event display-1 text-success mb-3"></i>
+                    <h5 class="card-title">Informe por Docente</h5>
+                    <p class="card-text">xxxxxxxxxxxxxxxxxxx</p>
+                    <a href="@Url.Action("Resumen", "Pedidos")" class="btn btn-warning">Registrar</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 3: -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card border-0 shadow-lg h-100 animate__animated animate__fadeInUp">
+                <div class="card-body text-center">
+                    <i class="bi bi-calendar-event display-1 text-success mb-3"></i>
+                    <h5 class="card-title">Informe Estadistico</h5>
+                    <p class="card-text">xxxxxxxxxxxxxxxxx</p>
+                    <a href="@Url.Action("Index", "Medidas")" class="btn btn-warning">Registrar</a>
+                </div>
+            </div>
+        </div>
+
+       
+
+      
+    </div>
+
 </div>

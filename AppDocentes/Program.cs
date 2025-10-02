@@ -1,9 +1,18 @@
+﻿using AppDocentes.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// 🔗 Conexión a base de datos
+builder.Services.AddDbContext<DocentesDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("CadenaSQL")));
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

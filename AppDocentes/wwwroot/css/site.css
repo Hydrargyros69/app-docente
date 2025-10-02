@@ -1,22 +1,47 @@
-html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 body {
-  margin-bottom: 60px;
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f6f9;
+    color: #343a40;
+}
+
+.navbar {
+    padding: 1rem;
+    background: linear-gradient(135deg, #528EB1, #528EB1); /* Degradado azul */
+}
+.navbar-brand img {
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+}
+
+.navbar-brand img:hover {
+    transform: scale(1.1);
+}
+
+.navbar-nav .nav-link {
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+}
+.logo-container {
+    text-align: center;
+    margin-bottom: 20px; /* Añadimos algo de espacio entre el logo y la tarjeta */
+}
+
+.logo-container img {
+        width: 100px; /* Ajusta el tamaño del logo */
+        height: auto;
+}
+
+main {
+    flex: 1;
+}
+
+.footer {
+    flex-shrink: 0;
 }

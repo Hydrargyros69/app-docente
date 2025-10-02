@@ -1,0 +1,90 @@
+﻿@model IEnumerable<AppDocentes.Models.MovDocente>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.IdCarrera)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdEscuela)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Horas)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Fecha)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdDocenteNavigation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdHorarioNavigation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdModuloNavigation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdSede1)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdSedeNavigation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdSemestreNavigation)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdCarrera)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdEscuela)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Horas)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Fecha)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdDocenteNavigation.IdDocente)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdHorarioNavigation.IdHorario)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdModuloNavigation.IdModulo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdSede1.IdSede)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdSedeNavigation.IdEscuela)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdSemestreNavigation.IdSemestre)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
