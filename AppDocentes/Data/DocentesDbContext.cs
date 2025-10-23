@@ -174,17 +174,24 @@ public partial class DocentesDbContext : DbContext
 
             entity.ToTable("Modulo", "dbo");
 
-            entity.Property(e => e.IdModulo).ValueGeneratedNever();
-            entity.Property(e => e.Horas).HasColumnName("horas");
+            // 🔹 AUTOINCREMENTAL
+            entity.Property(e => e.IdModulo)
+                .ValueGeneratedOnAdd(); // <-- esta es la clave
+
+            entity.Property(e => e.Horas)
+                .HasColumnName("horas");
+
             entity.Property(e => e.NomModulo)
                 .HasMaxLength(100)
                 .IsUnicode(false);
 
-            entity.HasOne(d => d.IdCarreraNavigation).WithMany(p => p.Modulos)
+            entity.HasOne(d => d.IdCarreraNavigation)
+                .WithMany(p => p.Modulos)
                 .HasForeignKey(d => d.IdCarrera)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Modulo_Carrera");
         });
+
 
         modelBuilder.Entity<MovDocente>(entity =>
         {

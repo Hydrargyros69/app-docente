@@ -5,13 +5,15 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+    <h2 class="mb-3">Lista de Horarios</h2>
+    <a asp-action="Create" class="btn btn-primary">Nueva Horarios</a>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+
+        <thead class="thead-dark">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.NomHorario)
@@ -25,12 +27,18 @@
             <td>
                 @Html.DisplayFor(modelItem => item.NomHorario)
             </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdHorario">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdHorario">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdHorario">Delete</a>
-            </td>
+                <td>
+                    <div class="btn-group" role="group">
+                        <a asp-action="Edit" class="btn btn-warning btn-sm me-1" asp-route-id="@item.IdHorario">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a asp-action="Delete" class="btn btn-danger btn-sm me-1" asp-route-id="@item.IdHorario">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                    </div>
+                </td>
         </tr>
 }
     </tbody>
 </table>
+</div>
