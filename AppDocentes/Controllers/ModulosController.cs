@@ -20,35 +20,41 @@ namespace AppDocentes.Controllers
         }
 
         // GET: Modulos
-        public async Task<IActionResult> Index(string searchModulo, int? idCarrera) // Acción GET que recibe filtro por texto y por carrera (opcional)
+        public async Task<IActionResult> Index(string searchModulo, int? idCarrera)
         {
-            // Consulta base
-            var modulos = _context.Modulos                 // Empieza desde la tabla Modulos del DbContext
-                .Include(m => m.IdCarreraNavigation)       // Incluye la navegación a Carrera para evitar lazy loading
-                .AsQueryable();                            // Lo deja como IQueryable para encadenar filtros dinámicamente
+            //Consulta base con relación a Carrera incluida
+            var modulos = _context.Modulos
+                .Include(m => m.IdCarreraNavigation)
+                .AsQueryable();
 
-            // Filtro por texto (nombre del módulo)
-            if (!string.IsNullOrEmpty(searchModulo))       // Si viene texto de búsqueda...
+            //Si no hay carrera seleccionada, no mostrar ningún registro
+            if (!idCarrera.HasValue || idCarrera == 0)
             {
-                modulos = modulos.Where(m => m.NomModulo.Contains(searchModulo)); // ...filtra por nombre que contenga el texto
+                //Cargar el combo de carreras para la vista
+                ViewData["IdCarrera"] = new SelectList(_context.Carreras, "IdCarrera", "NomCarrera");
+                ViewData["CurrentFilter"] = searchModulo;
+
+                //Retorna la vista con una lista vacía
+                return View(new List<Modulo>());
             }
 
-            // Filtro por carrera
-            if (idCarrera.HasValue && idCarrera > 0)       // Si se seleccionó una carrera válida...
+            //Si hay una carrera seleccionada, filtra los módulos de esa carrera
+            modulos = modulos.Where(m => m.IdCarrera == idCarrera);
+
+            //Si además se escribió texto de búsqueda, aplica el filtro adicional
+            if (!string.IsNullOrEmpty(searchModulo))
             {
-                modulos = modulos.Where(m => m.IdCarrera == idCarrera); // ...filtra por ese IdCarrera
+                modulos = modulos.Where(m => m.NomModulo.Contains(searchModulo));
             }
 
-            // Cargar lista de carreras para el select
-            ViewData["IdCarrera"] = new SelectList(        // Prepara el SelectList para el <select> de la vista
-                _context.Carreras,                         // Fuente: tabla Carreras
-                "IdCarrera",                               // Valor del <option>
-                "NomCarrera",                              // Texto visible del <option>
-                idCarrera);                                // Valor seleccionado (mantiene selección tras postback)
-            ViewData["CurrentFilter"] = searchModulo;      // Guarda el texto de búsqueda para mantenerlo en el input
+            //Cargar lista de carreras para el select (manteniendo la seleccionada)
+            ViewData["IdCarrera"] = new SelectList(_context.Carreras, "IdCarrera", "NomCarrera", idCarrera);
+            ViewData["CurrentFilter"] = searchModulo;
 
-            return View(await modulos.ToListAsync());      // Ejecuta la consulta con los filtros y envía la lista a la vista
+            //Devuelve la vista con los módulos filtrados
+            return View(await modulos.ToListAsync());
         }
+
 
 
         // GET: Modulos/Create

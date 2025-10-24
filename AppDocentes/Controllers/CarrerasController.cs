@@ -20,28 +20,27 @@ namespace AppDocentes.Controllers
         }
 
         // GET: Carreras
-        public async Task<IActionResult> Index()
+        // GET: Carreras
+        public async Task<IActionResult> Index(string searchCarrera)
         {
-            return View(await _context.Carreras.ToListAsync());
-        }
+            //Consulta base: obtiene todas las carreras desde la base de datos
+            var carreras = from c in _context.Carreras
+                           select c;
 
-        // GET: Carreras/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
+            // Si el usuario escribió algo en el cuadro de búsqueda
+            if (!string.IsNullOrEmpty(searchCarrera))
             {
-                return NotFound();
+                // Filtra las carreras cuyo nombre contenga el texto buscado (sin distinguir mayúsculas/minúsculas)
+                carreras = carreras.Where(c => c.NomCarrera.ToLower().Contains(searchCarrera.ToLower()));
             }
 
-            var carrera = await _context.Carreras
-                .FirstOrDefaultAsync(m => m.IdCarrera == id);
-            if (carrera == null)
-            {
-                return NotFound();
-            }
+            // Guarda el filtro actual para que se mantenga en la vista (en el input)
+            ViewData["CurrentFilter"] = searchCarrera;
 
-            return View(carrera);
+            // Devuelve la lista (filtrada o completa) a la vista
+            return View(await carreras.ToListAsync());
         }
+
 
         // GET: Carreras/Create
         public IActionResult Create()
