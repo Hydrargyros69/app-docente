@@ -5,15 +5,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AppDocentes.Models;
 
+[Table("Carrera", Schema = "adminom")]
 public partial class Carrera
 {
     [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
     [Display(Name = "Código")]
     public int IdCarrera { get; set; }
 
-    [Required]
-    [StringLength(100)]
+    [Required(ErrorMessage = "El nombre de la carrera es obligatorio.")]
+    [StringLength(100, MinimumLength = 3, ErrorMessage = "El nombre debe tener entre 3 y 100 caracteres.")]
     [Display(Name = "Nombre")]
     public string NomCarrera { get; set; } = null!;
 

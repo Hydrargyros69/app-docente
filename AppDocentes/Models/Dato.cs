@@ -5,25 +5,26 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AppDocentes.Models;
 
+[Table("Datos", Schema = "adminom")]
 public partial class Dato
 {
     [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
     [Display(Name = "Código")]
     public int IdDatos { get; set; }
 
-    [ForeignKey(nameof(Grado))]
-    [Required]
-    [Display(Name = "Código")]
+    [Required(ErrorMessage = "El grado es obligatorio.")]
+    [Display(Name = "Grado")]
+    [ForeignKey(nameof(IdGradosNavigation))]
     public int IdGrados { get; set; }
 
-    [ForeignKey(nameof(Docente))]
-    [Required]
+    [Required(ErrorMessage = "El docente es obligatorio.")]
     [Display(Name = "Docente")]
+    [ForeignKey(nameof(IdDocentesNavigation))]
     public int IdDocentes { get; set; }
 
-    [Required]
-    [StringLength(500)]
+    [Required(ErrorMessage = "Los datos académicos son obligatorios.")]
+    [StringLength(150, MinimumLength = 5, ErrorMessage = "Los datos académicos deben tener entre 5 y 150 caracteres.")]
     [Display(Name = "Datos Académicos")]
     public string DatosAcademicos { get; set; } = null!;
 

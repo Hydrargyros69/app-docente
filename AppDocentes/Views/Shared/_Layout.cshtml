@@ -66,9 +66,11 @@
                                 Informes
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="dropdown-menu">
-                                <a class="nav-link text-white" href="@Url.Action("GeneratePdf", "Pdf")" target="_blank">
-                                    Descargar Informe PDF
-                                </a>
+                                <li>
+                                    <a class="dropdown-item" href="@Url.Action("GeneratePdf", "Pdf")" target="_blank">
+                                        Descargar Informe PDF
+                                    </a>
+                                </li>
                             </ul>
                         </li>
 
@@ -109,4 +111,15 @@
             window.location.href = '@Url.Action("Index", "Inicio")';
         }
     }
+
+    // Si la página se restaura desde la bfcache (p. ej. al pulsar Atrás),
+    // forzamos una recarga para que el servidor re-evalúe la autenticación.
+    window.addEventListener('pageshow', function (event) {
+      if (event.persisted) {
+        // reload() sin cache
+        window.location.reload(true);
+      }
+    });
 </script>
+
+

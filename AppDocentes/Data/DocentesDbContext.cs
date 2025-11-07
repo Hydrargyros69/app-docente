@@ -284,6 +284,9 @@ public partial class DocentesDbContext : DbContext
             entity.Property(e => e.PassUsuario)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+
+            entity.Property(u => u.IdUsuario)
+                .UseIdentityColumn(); // or .ValueGeneratedOnAdd();
         });
 
         OnModelCreatingPartial(modelBuilder);

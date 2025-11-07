@@ -20,9 +20,25 @@ namespace AppDocentes.Controllers
         }
 
         // GET: Escuelas
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchEscuela)
         {
-            return View(await _context.Escuelas.ToListAsync());
+            //Consulta base: obtiene todas las carreras desde la base de datos
+            var escuela = from c in _context.Escuelas
+                           select c;
+
+            // Si el usuario escribió algo en el cuadro de búsqueda
+            if (!string.IsNullOrEmpty(searchEscuela))
+            {
+                // Filtra las carreras cuyo nombre contenga el texto buscado (sin distinguir mayúsculas/minúsculas)
+                escuela = escuela.Where(c => c.NomEscuela.ToLower().Contains(searchEscuela.ToLower()));
+            }
+
+            // Guarda el filtro actual para que se mantenga en la vista (en el input)
+            ViewData["CurrentFilter"] = searchEscuela;
+
+            // Devuelve la lista (filtrada o completa) a la vista
+            return View(await escuela.ToListAsync());
+
         }
 
         // GET: Escuelas/Details/5
