@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<h1>Docentitos</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -28,7 +28,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.MatDocente)
             </th>
-            <th>
+            @*<th>
                 @Html.DisplayNameFor(model => model.EstadoCivil)
             </th>
             <th>
@@ -45,7 +45,7 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.IdCategoriaNavigation)
-            </th>
+            </th>*@
             <th></th>
         </tr>
     </thead>
@@ -67,10 +67,10 @@
             <td>
                 @Html.DisplayFor(modelItem => item.MatDocente)
             </td>
-            <td>
+            @*<td>
                 @Html.DisplayFor(modelItem => item.EstadoCivil)
             </td>
-            <td>
+           <td>
                 @Html.DisplayFor(modelItem => item.FechaNacimiento)
             </td>
             <td>
@@ -84,12 +84,21 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.IdCategoriaNavigation.IdCategoria)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdDocente">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdDocente">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdDocente">Delete</a>
-            </td>
+            </td>*@
+                <td>
+                    <div class="btn-group" role="group">
+                        <a asp-action="Edit" asp-route-id="@item.IdDocente" class="btn btn-warning btn-sm me-1" title="Editar">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a asp-action="Details" asp-route-id="@item.IdDocente" class="btn btn-info btn-sm me-1" title="Detalles">
+                            <i class="fas fa-info-circle"></i>
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@item.IdDocente" class="btn btn-danger btn-sm" title="Eliminar">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                    </div>
+                </td>
+
         </tr>
 }
     </tbody>

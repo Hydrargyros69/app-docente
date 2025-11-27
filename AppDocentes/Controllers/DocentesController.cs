@@ -48,7 +48,7 @@ namespace AppDocentes.Controllers
         // GET: Docentes/Create
         public IActionResult Create()
         {
-            ViewData["IdCategoria"] = new SelectList(_context.Categoria, "IdCategoria", "IdCategoria");
+            ViewData["IdCategoria"] = new SelectList(_context.Categoria, "IdCategoria", "NomCategoria");
             return View();
         }
 
@@ -57,7 +57,7 @@ namespace AppDocentes.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdDocente,IdCategoria,Telefono,NomDocente,Rut,PatDocente,MatDocente,EstadoCivil,FechaNacimiento,Nacionalidad,Direccion,Correo")] Docente docente)
+        public async Task<IActionResult> Create([Bind("IdDocente,NomCategoria,Telefono,NomDocente,Rut,PatDocente,MatDocente,EstadoCivil,FechaNacimiento,Nacionalidad,Direccion,Correo")] Docente docente)
         {
             if (ModelState.IsValid)
             {
@@ -65,7 +65,7 @@ namespace AppDocentes.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdCategoria"] = new SelectList(_context.Categoria, "IdCategoria", "IdCategoria", docente.IdCategoria);
+            ViewData["IdCategoria"] = new SelectList(_context.Categoria, "IdCategoria", "NomCategoria", docente.IdCategoria);
             return View(docente);
         }
 

@@ -1,0 +1,91 @@
+﻿@using System.Linq
+@model IEnumerable<AppDocentes.Models.Carrera>
+
+@{
+    Layout = null;
+    var fecha = DateTime.Now.ToString("dd-MM-yyyy HH:mm");
+    var total = Model?.Sum(c => c.Modulos?.Count() ?? 0) ?? 0;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <title>Informe de Módulos</title>
+    <style>
+        body { font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #222; margin: 0; padding: 0; }
+        .container { padding: 15px; }
+        .header { text-align: center; margin-bottom: 8px; }
+        .logo { height: 50px; margin-bottom: 6px; }
+        .title { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+        .meta { font-size: 10px; color: #555; margin-bottom: 12px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 6px; }
+        th, td { border: 1px solid #ddd; padding: 6px 8px; text-align: left; vertical-align: middle; }
+        th { background-color: #f4f4f4; font-weight: 600; }
+        .footer { margin-top: 12px; font-size: 10px; color: #666; text-align: right; }
+        .count { font-size: 12px; color: #333; margin-bottom: 6px; }
+        .small { font-size: 11px; color: #444; }
+        @@page { margin: 15mm; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="~/img/LOGO_CFT_WEB_BLANCO-04.png" alt="Logo" class="logo" onerror="this.style.display='none'" />
+            <div class="title">Informe de Módulos</div>
+            <div class="meta">Generado: @fecha</div>
+        </div>
+
+        <div class="count">Total de Módulos: <strong>@total</strong></div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:12%;">Código</th>
+                    <th>Nombre de Módulo</th>
+                    <th style="width:12%;">Horas</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var carrera in Model)
+                    {
+                        <tr class="carrera_row">
+                            <td colspan="3">@carrera.NomCarrera (código: @carrera.IdCarrera)</td>
+                        </tr>
+
+                        if (carrera.Modulos != null && carrera.Modulos.Any())
+                        {
+                            foreach (var mod in carrera.Modulos.OrderBy(m => m.NomModulo))
+                            {
+                                <tr>
+                                    <td class="small">@mod.IdModulo</td>
+                                    <td>@mod.NomModulo</td>
+                                    <td class="small">@((mod.Horas.HasValue) ? mod.Horas.ToString() : "")</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="3" class="small">Sin módulos</td>
+                            </tr>
+                        }
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="3">No hay datos</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="footer">
+            Página 1
+        </div>
+    </div>
+</body>
+</html>

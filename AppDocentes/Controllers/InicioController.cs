@@ -3,6 +3,7 @@ using AppDocentes.Recursos;
 using AppDocentes.Servicios.Contrato;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -24,13 +25,14 @@ namespace AppDocentes.Controllers
             return RedirectToAction("IniciarSesion", "Inicio");
         }
 
+        [AllowAnonymous]
         public IActionResult Registrarse()
         {
             return View();
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [AllowAnonymous]
         public async Task<IActionResult> Registrarse(Usuario modelo)
         {
             if (!ModelState.IsValid)
@@ -50,13 +52,14 @@ namespace AppDocentes.Controllers
             return View(modelo);
         }
 
+        [AllowAnonymous]
         public IActionResult IniciarSesion()
         {
             return View();
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [AllowAnonymous]
         public async Task<IActionResult> IniciarSesion(string nombre, string clave)
         {
             if (string.IsNullOrWhiteSpace(nombre) || string.IsNullOrWhiteSpace(clave))
@@ -76,7 +79,6 @@ namespace AppDocentes.Controllers
             {
                 new Claim(ClaimTypes.Name, usuarioEncontrado.NomUsuario ?? string.Empty),
                 new Claim("UsuarioID", usuarioEncontrado.IdUsuario.ToString())
-                // Si el modelo Usuario tuviera rol, añadir aquí: new Claim(ClaimTypes.Role, ...)
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -91,6 +93,7 @@ namespace AppDocentes.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> CerrarSesion()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
@@ -99,10 +102,11 @@ namespace AppDocentes.Controllers
             HttpContext.Response.Headers["Pragma"] = "no-cache";
             HttpContext.Response.Headers["Expires"] = "0";
 
-            return Redirect("/Inicio/IniciarSesion"); // redirección absoluta para evitar ambigüedades
+            return Redirect("/Inicio/IniciarSesion");
         }
     }
 }
+
 
 
 

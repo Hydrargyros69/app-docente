@@ -7,6 +7,14 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AppDocentes.Data;
 using AppDocentes.Models;
+using Rotativa.AspNetCore;
+using Rotativa.AspNetCore.Options;
+using System.Data.SqlTypes;
+using NuGet.Packaging;
+using System.Security.AccessControl;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+
+
 
 namespace AppDocentes.Controllers
 {
@@ -147,6 +155,26 @@ namespace AppDocentes.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        /// <summary>
+        /// GET: Carreras/GeneratePdf
+        /// Genera un archivo PDF con la lista de carreras usando iText7.
+        /// </summary>
+        public IActionResult GeneratePdf()
+        {
+            var lista = _context.Carreras.OrderBy(c => c.NomCarrera).ToList();
+            var pdf = new ViewAsPdf("~/Views/Carreras/Report.cshtml", lista)
+            {
+                FileName = "Carreras.pdf",
+                PageSize = Size.A4,
+                PageOrientation = Orientation.Portrait,
+                PageMargins = new Margins { Top = 12,  Right= 15, Bottom = 15, Left = 15 }
+
+            };
+            return pdf;
+        }
+
+
+
 
         private bool CarreraExists(int id)
         {

@@ -1,0 +1,92 @@
+﻿@using Microsoft.AspNetCore.Mvc.Rendering
+@using AppDocentes.Models
+@model IEnumerable<AppDocentes.Models.DocenteHorasDto>
+
+@{
+    var docentesSelect = ViewData["Docentes"] as Microsoft.AspNetCore.Mvc.Rendering.SelectList;
+    var carrerasSelect = ViewData["Carreras"] as Microsoft.AspNetCore.Mvc.Rendering.SelectList;
+    var selectedDocente = ViewContext.HttpContext.Request.Query["docenteId"].ToString();
+    var selectedCarrera = ViewContext.HttpContext.Request.Query["carreraId"].ToString();
+    var totalGeneral = Model?.Sum(m => m.TotalHoras) ?? 0;
+}
+
+<h2 class="mb-3">Resultados de Horas por Docente</h2>
+
+<form method="get" action="@Url.Action("Filter", "Reports")" class="row g-2 align-items-end mb-3">
+    <div class="col-sm-5 col-md-4">
+        <label for="docenteId" class="form-label">Docente</label>
+        <select id="docenteId" name="docenteId" class="form-select" aria-label="Filtrar por docente">
+            <option value="">(Todos)</option>
+            @if (docentesSelect != null)
+            {
+                foreach (var item in docentesSelect)
+                {
+                    <option value="@item.Value" selected="@(item.Value == selectedDocente ? "selected" : null)">@item.Text</option>
+                }
+            }
+        </select>
+    </div>
+
+    <div class="col-sm-5 col-md-4">
+        <label for="carreraId" class="form-label">Carrera</label>
+        <select id="carreraId" name="carreraId" class="form-select" aria-label="Filtrar por carrera">
+            <option value="">(Todas)</option>
+            @if (carrerasSelect != null)
+            {
+                foreach (var item in carrerasSelect)
+                {
+                    <option value="@item.Value" selected="@(item.Value == selectedCarrera ? "selected" : null)">@item.Text</option>
+                }
+            }
+        </select>
+    </div>
+
+    <div class="col-sm-12 col-md-4 d-flex gap-2">
+        <button type="submit" class="btn btn-primary">Filtrar</button>
+
+        <button type="submit" formaction="@Url.Action("DocentesHorasPdf", "Reports")" class="btn btn-secondary" title="Generar PDF">
+            Generar PDF
+        </button>
+
+        <a class="btn btn-outline-secondary ms-auto" href="@Url.Action("Filter", "Reports")" title="Limpiar filtros">Limpiar</a>
+    </div>
+</form>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-info" role="status">
+        No hay resultados para los filtros seleccionados.
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table id="tablaHorasDocentes" class="table table-bordered table-sm">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">Docente</th>
+                    <th scope="col">Carrera</th>
+                    <th scope="col">Módulo</th>
+                    <th scope="col" class="text-end">Total Horas</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.NomDocente</td>
+                        <td>@item.NomCarrera</td>
+                        <td>@item.NomModulo</td>
+                        <td class="text-end">@item.TotalHoras</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr class="table-secondary">
+                    <th colspan="3" class="text-end">Total General</th>
+                    <th class="text-end">@totalGeneral</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+}

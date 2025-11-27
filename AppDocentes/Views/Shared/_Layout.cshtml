@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <!-- Custom CSS -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-       
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
@@ -108,7 +108,8 @@
 <script>
     function confirmLogout() {
         if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
-            window.location.href = '@Url.Action("Index", "Inicio")';
+            // Usar replace para no dejar la página anterior en el historial
+            window.location.replace('@Url.Action("CerrarSesion", "Inicio")');
         }
     }
 
@@ -116,8 +117,8 @@
     // forzamos una recarga para que el servidor re-evalúe la autenticación.
     window.addEventListener('pageshow', function (event) {
       if (event.persisted) {
-        // reload() sin cache
-        window.location.reload(true);
+        // recarga desde servidor; si la cookie de autenticación no existe, el servidor redirigirá al login
+        window.location.reload();
       }
     });
 </script>

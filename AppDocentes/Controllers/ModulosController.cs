@@ -7,6 +7,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AppDocentes.Data;
 using AppDocentes.Models;
+using Rotativa.AspNetCore;
+using Rotativa.AspNetCore.Options;
+using System.Data.SqlTypes;
+using NuGet.Packaging;
+using System.Security.AccessControl;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
 namespace AppDocentes.Controllers
 {
@@ -55,7 +61,39 @@ namespace AppDocentes.Controllers
             return View(await modulos.ToListAsync());
         }
 
+        // [NUEVA ACCIÓN] GET: Modulos/GeneratePdf
+        // Genera PDF con la lista de módulos (acepta filtros opcionales por query string)
+        [HttpGet]
+        public IActionResult GeneratePdf(int? idCarrera, string? searchModulo)
+        {
+            var carreras = _context.Carreras
+                .Include(c => c.Modulos)
+                .OrderBy(c => c.NomCarrera)
+                .AsQueryable();
 
+            if (idCarrera.HasValue && idCarrera.Value != 0)
+            {
+                carreras = carreras.Where(c => c.IdCarrera == idCarrera.Value);
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchModulo))
+            {
+                // Filtra carreras que tengan al menos un módulo cuyo nombre contenga el texto
+                carreras = carreras.Where(c => c.Modulos.Any(m => m.NomModulo.Contains(searchModulo)));
+            }
+
+            var lista = carreras.ToList();
+
+            var pdf = new ViewAsPdf("~/Views/Modulos/Report.cshtml", lista)
+            {
+                FileName = "Modulos_Por_Carrera.pdf",
+                PageSize = Size.A4,
+                PageOrientation = Orientation.Portrait,
+                PageMargins = new Margins(20, 20, 20, 20)
+            };
+
+            return pdf;
+        }
 
         // GET: Modulos/Create
         // Acción GET: Modulos/Create
@@ -193,7 +231,7 @@ namespace AppDocentes.Controllers
             // para que la vista Edit no quede vacía al recargar
             ViewData["IdCarrera"] = new SelectList(_context.Carreras, "IdCarrera", "NomCarrera", modulo.IdCarrera);
 
-            // Devuelve la vista "Edit" con el objeto módulo cargado,
+            // Devuelve la vista "Edit" with el objeto módulo cargado,
             // mostrando los mensajes de error correspondientes
             return View(modulo);
         }
@@ -231,6 +269,22 @@ namespace AppDocentes.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> GeneratePdfByCarrera()
+        {
+            var CarrerasConModulos = await _context.Carreras
+                .Include(c => c.Modulos)
+                .OrderBy(c => c.NomCarrera)
+                .ToListAsync();
+            var pdf = new ViewAsPdf("~/views/Modulos/Report.cshtml", CarrerasConModulos)
+            { 
+                FileName = "Informe_Modulos_Por_Carrera.pdf",
+                PageSize = Size.A4,
+                PageOrientation = Orientation.Portrait,
+                PageMargins = new Margins(20, 20, 20, 20)
+            };
+            return pdf;
         }
 
         private bool ModuloExists(int id)

@@ -1,0 +1,92 @@
+﻿@using System.Linq
+@model IEnumerable<AppDocentes.Models.DocenteHorasDto>
+
+@{
+    Layout = null;
+    var fecha = DateTime.Now.ToString("dd-MM-yyyy HH:mm");
+    // Agrupar por docente (si model es null, usar coleccion vacia)
+    var gruposDocente = (Model ?? Enumerable.Empty<AppDocentes.Models.DocenteHorasDto>())
+        .GroupBy(x => new { x.IdDocente, x.NomDocente })
+        .OrderBy(g => g.Key.NomDocente);
+}
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <title>Horas por Docente, Carrera y Módulo</title>
+        <style>
+            body { font-family: Arial, Helvetca, sans-serif; font-size: 12px; color:#222;margin:0;padding:0;} 
+            .container{ padding: 15px;}
+            h2 {margin: 0 0 8px 0; font-size 16px;}
+            .meta {font-size:11px; color: #55; margin-bottom: 10px;}
+            table {width:100%; border-collapse: collapse; margin-top: 6px;}
+            th, td {border: 1px solid #ddd; padding: 6px 8px; text-align: left; vertical-align: middle; }
+            th {background-color: #f4f4f4; font-weight: 600; }
+            .carrera{ background:#eef6ff; font-weight:600; }
+            .footer{ margin-top: 12px; font-size: 10px; color:#666; text-align:right;}
+            .small { font-size: 11px; color:#444; }
+            @@page{ margin: 15mm; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="card-header">
+                <h2>Informe: Horas por Docente / Carrera / Módulo</h2>
+                <div class="meta">Generado: @fecha</div>
+            </div>
+
+            @if (!gruposDocente.Any())
+            {
+                <div>No hay datos para mostrar.</div>
+            }
+            else
+            {
+                foreach (var grupoDocente in gruposDocente)
+                {
+                    <h3>Docente: @grupoDocente.Key.NomDocente</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Carrera</th>
+                                <th>Módulo</th>
+                                <th>Horas Asignadas</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                // Agrupar por Carrera dentro del docente
+                                var gruposCarrera = grupoDocente
+                                    .GroupBy(x => new { x.IdCarrera, x.NomCarrera })
+                                    .OrderBy(g => g.Key.NomCarrera);
+                            }
+
+                            @foreach (var grupoCarrera in gruposCarrera)
+                            {
+                                var modulos = grupoCarrera
+                                    .GroupBy(x => new { x.IdModulo, x.NomModulo })
+                                    .OrderBy(m => m.Key.NomModulo);
+                                var primeraFila = true;
+
+                                foreach (var modulo in modulos)
+                                {
+                                    <tr>
+                                        @if (primeraFila)
+                                        {
+                                            <td class="carrera" rowspan="@modulos.Count()">@grupoCarrera.Key.NomCarrera</td>
+                                            primeraFila = false;
+                                        }
+                                        <td>@modulo.Key.NomModulo</td>
+                                        <td>@modulo.Sum(m => m.TotalHoras)</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                    <div style="margin-top:12px;"></div>
+                }
+            }
+
+            <div class="footer">Página 1</div>
+        </div>
+    </body>
+</html>

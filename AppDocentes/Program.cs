@@ -4,10 +4,11 @@ using AppDocentes.Servicios.Implementacion;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Globalization;
-using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,9 +49,11 @@ services.Configure<RequestLocalizationOptions>(options =>
 });
 
 // MVC + Razor Pages (priorizar compatibilidad con Razor Pages)
+// Se aplica autorización global: todas las rutas requieren autenticación salvo las marcadas con [AllowAnonymous]
 services.AddControllersWithViews(options =>
 {
-    // Evitar cache en todas las respuestas por defecto (si es lo que se desea)
+    options.Filters.Add(new AuthorizeFilter());
+    // Evitar cache en todas las respuestas por defecto
     options.Filters.Add(new ResponseCacheAttribute
     {
         NoStore = true,
@@ -77,7 +80,6 @@ services.AddDbContextPool<DocentesDbContext>(options =>
         options.EnableDetailedErrors();
     }
 });
-
 
 // Servicios de aplicación
 services.AddScoped<IUsuarioService, UsuarioService>();
@@ -110,6 +112,9 @@ services.AddSession(options =>
 services.AddResponseCaching();
 
 var app = builder.Build();
+Rotativa.AspNetCore.RotativaConfiguration.Setup(app.Environment.WebRootPath, "Rotativa");
+
+
 
 // Asegurar cultura global en runtime también
 CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
@@ -131,7 +136,6 @@ app.Use(async (context, next) =>
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
-    //app.UseMigrationsEndPoint(); // si AddDatabaseDeveloperPageExceptionFilter está activo
 }
 else
 {
@@ -150,13 +154,11 @@ if (locOptions != null)
 }
 else
 {
-    // Fallback mínimo
     app.UseRequestLocalization(new RequestLocalizationOptions().SetDefaultCulture("es-CL"));
 }
 
 app.UseRouting();
 
-// Session antes de autenticación/autorización si se usa dentro de esos middlewares
 app.UseSession();
 
 app.UseAuthentication();
